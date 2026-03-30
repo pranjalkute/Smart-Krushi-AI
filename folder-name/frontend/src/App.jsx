@@ -9,8 +9,10 @@ export default function App() {
 
   const handleSubmit = async () => {
     setLoading(true);
+    setResult("");
+
     try {
-      const response = await fetch("http://127.0.0.1:5000/recommend", {
+      const response = await fetch("https://smart-krushi-ai-4.onrender.com/recommend", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -19,19 +21,28 @@ export default function App() {
       });
 
       const data = await response.json();
-      setResult("🌾 Recommended Crops: " + data.crops.join(", "));
+
+      if (data.crops) {
+        setResult("🌾 Recommended Crops: " + data.crops.join(", "));
+      } else {
+        setResult("❌ No recommendation found");
+      }
+
     } catch (error) {
       setResult("❌ Error connecting to server");
     }
+
     setLoading(false);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-100 to-green-50 flex items-center justify-center p-6">
       <div className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md">
+        
         <h1 className="text-3xl font-bold text-green-700 mb-2 text-center">
           🌾 Smart Krushi
         </h1>
+
         <p className="text-gray-500 text-center mb-6">
           AI Farming Advisor
         </p>
@@ -72,8 +83,8 @@ export default function App() {
             <p className="text-green-800 font-medium">{result}</p>
           </div>
         )}
+
       </div>
     </div>
   );
 }
-
